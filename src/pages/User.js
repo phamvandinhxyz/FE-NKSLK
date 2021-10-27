@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -21,6 +21,7 @@ import {
   TablePagination
 } from '@mui/material';
 // components
+import axios from 'axios';
 import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
@@ -32,11 +33,16 @@ import USERLIST from '../_mocks_/user';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'id', label: 'Mã công nhân', alignRight: false },
+  { id: 'name', label: 'Tên công nhân', alignRight: false },
+  { id: 'sex', label: 'Giới tính', alignRight: false },
+  { id: 'birth', label: 'Ngày sinh', alignRight: false },
+  { id: 'phongban', label: 'Phòng ban', alignRight: false },
+  { id: 'chucVu', label: 'Chức vụ', alignRight: false },
+  { id: 'luongBaoHiem', label: 'Lương bảo hiểm', alignRight: false },
+  { id: 'luongHopDong', label: 'Lương hợp đồng', alignRight: false },
+  { id: 'gioBatDau', label: 'Giờ bắt đầu', alignRight: false },
+  { id: 'gioKetThuc', label: 'Giờ kết thúc', alignRight: false },
   { id: '' }
 ];
 
@@ -78,6 +84,29 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [pageEmployee, setPageEmployee] = useState(1);
+  const [employeeList, setEmployeeList] = useState([]);
+
+  useEffect(() => {
+    getEmployees();
+  }, [pageEmployee, rowsPerPage])
+
+  const getEmployees = () => {
+    axios({
+      method: 'get',
+      url: `http://localhost:8080/api/v1/admin/employees?page=${pageEmployee}&size=${rowsPerPage}`,
+    })
+    .then(res => {
+      if(res.status) {
+        console.log(res.data.data);
+        setEmployeeList(res.data.data);
+      }
+      else {
+        console.log(res.Message);
+      }
+    })
+    .catch()
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -94,31 +123,33 @@ export default function User() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected = [];
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1)
+  //     );
+  //   }
+  //   setSelected(newSelected);
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    console.log('aaaa');
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    console.log('aa');
   };
 
   const handleFilterByName = (event) => {
@@ -136,7 +167,7 @@ export default function User() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Danh sách công nhân
           </Typography>
           <Button
             variant="contained"
@@ -144,7 +175,7 @@ export default function User() {
             to="#"
             startIcon={<Icon icon={plusFill} />}
           >
-            New User
+            Thêm công nhân
           </Button>
         </Stack>
 
@@ -165,63 +196,50 @@ export default function User() {
                   rowCount={USERLIST.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                  {employeeList
+                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((employee) => {
+                      const { maCongNhan, hoTen, chucVu, gioBatDau, gioKetThuc, gioiTinh, luongBaoHiem, luongHopDong, maDanhMucCongNhan, ngayNamSinh, phongBan } = employee;
+                      // const isItemSelected = selected.indexOf(name) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={maCongNhan}
                           tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                          {/* <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {maCongNhan}
                               </Typography>
                             </Stack>
-                          </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
-
+                          </TableCell> */}
+                          <TableCell align="left">{maCongNhan}</TableCell>
+                          <TableCell align="left">{hoTen}</TableCell>
+                          <TableCell align="left">{gioiTinh}</TableCell>
+                          <TableCell align="left">{ngayNamSinh}</TableCell>
+                          <TableCell align="left">{phongBan}</TableCell>
+                          <TableCell align="left">{chucVu}</TableCell>
+                          <TableCell align="left">{luongBaoHiem}</TableCell>
+                          <TableCell align="left">{luongHopDong}</TableCell>
+                          <TableCell align="left">{gioBatDau}</TableCell>
+                          <TableCell align="left">{gioKetThuc}</TableCell>
                           <TableCell align="right">
                             <UserMoreMenu />
                           </TableCell>
                         </TableRow>
                       );
                     })}
-                  {emptyRows > 0 && (
+                  {/* {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
                     </TableRow>
-                  )}
+                  )} */}
                 </TableBody>
-                {isUserNotFound && (
+                {/* {isUserNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -229,7 +247,7 @@ export default function User() {
                       </TableCell>
                     </TableRow>
                   </TableBody>
-                )}
+                )} */}
               </Table>
             </TableContainer>
           </Scrollbar>
