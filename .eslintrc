@@ -25,6 +25,7 @@
     }
   },
   "rules": {
+    "prettier/prettier": 0,
     "import": 0,
     "max-len": 0,
     "no-alert": 0,
@@ -60,16 +61,16 @@
       {
         "ignoreRestSiblings": false
       }
-    ],
-    "prettier/prettier": [
-      2,
-      {
-        "printWidth": 100,
-        "singleQuote": true,
-        "trailingComma": "none",
-        "tabWidth": 2,
-        "endOfLine": "auto"
-      }
     ]
+//    ,"prettier/prettier": [
+//      2,
+//      {
+//        "printWidth": 100,
+//        "singleQuote": true,
+//        "trailingComma": "none",
+//        "tabWidth": 2,
+//        "endOfLine": "auto"
+//      }
+//    ]
   }
 }

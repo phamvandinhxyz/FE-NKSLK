@@ -46,7 +46,7 @@ export default function ShopProductCard({ product }) {
             {status}
           </Label>
         )}
-        <ProductImgStyle alt={name} src={cover} />
+        <ProductImgStyle alt={name} src="https://res.cloudinary.com/dinhpv/image/upload/v1633756158/instargram-clone/axv5oe9qlz8e98brhfli.jpg" />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
