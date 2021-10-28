@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useEffect, useState, useRef } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import {
   Card,
@@ -85,8 +85,9 @@ export default function User() {
   const [pageEmployee, setPageEmployee] = useState(1);
   const [employeeList, setEmployeeList] = useState([]);
 
-
   const totalEmployee = useRef(1);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getEmployees();
@@ -110,8 +111,9 @@ export default function User() {
       }
     })
     .catch(e => {
-      console.log("Failure!!!", e);
-      alert('Network Failure!!');
+      console.log("Network Failure!!!", e);
+      navigate('/404');
+      alert('Không thể kết nối với Internet!!');
     })
   }
 
