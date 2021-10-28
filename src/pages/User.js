@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -9,26 +9,24 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  CircularProgress,
+  Box
 } from '@mui/material';
 // components
 import axios from 'axios';
 import Page from '../components/Page';
-import Label from '../components/Label';
+// import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
+// import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-//
-import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
@@ -48,44 +46,47 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc'
+//     ? (a, b) => descendingComparator(a, b, orderBy)
+//     : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
+// function applySortFilter(array, comparator, query) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
+//   if (query) {
+//     return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+//   }
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 export default function User() {
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
+  // const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
+  // const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageEmployee, setPageEmployee] = useState(1);
   const [employeeList, setEmployeeList] = useState([]);
+
+
+  const totalEmployee = useRef(1);
 
   useEffect(() => {
     getEmployees();
@@ -99,29 +100,35 @@ export default function User() {
     .then(res => {
       if(res.status) {
         console.log(res.data.data);
+        totalEmployee.current = res.data.total;
         setEmployeeList(res.data.data);
+        console.log(res.data.total);
       }
       else {
-        console.log(res.Message);
+        console.log(res.message);
+        alert(res.message);
       }
     })
-    .catch()
+    .catch(e => {
+      console.log("Failure!!!", e);
+      alert('Network Failure!!');
+    })
   }
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  // const handleRequestSort = (event, property) => {
+  //   const isAsc = orderBy === property && order === 'asc';
+  //   setOrder(isAsc ? 'desc' : 'asc');
+  //   setOrderBy(property);
+  // };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = USERLIST.map((n) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   // const handleClick = (event, name) => {
   //   const selectedIndex = selected.indexOf(name);
@@ -142,28 +149,34 @@ export default function User() {
   // };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    console.log('aaaa');
+    if(newPage > page){
+      setPage(newPage);
+      setPageEmployee(pageEmployee + 1);
+    }
+    else{
+      setPage(newPage);
+      setPageEmployee(pageEmployee - 1);
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    console.log('aa');
+    setPageEmployee(1);
   };
 
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
+  // const handleFilterByName = (event) => {
+  //   setFilterName(event.target.value);
+  // };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - totalEmployee.current) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  // const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  // const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="Danh sách công nhân">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -183,19 +196,36 @@ export default function User() {
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
-            onFilterName={handleFilterByName}
+            // onFilterName={handleFilterByName}
           />
-
+           {
+            totalEmployee.current > 1
+            ?
+            <TablePagination
+            labelRowsPerPage="Số công nhân mỗi trang"
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalEmployee.current}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            : 
+            <Box sx={{ display: 'flex',justifyContent:'end', padding: 2}}>
+              <CircularProgress size={20} color="inherit"/>
+            </Box>
+          }
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ maxWidth: 2000, minWidth: 1000 }}>
               <Table>
                 <UserListHead
-                  order={order}
-                  orderBy={orderBy}
+                  // order={order}
+                  // orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
+                  // rowCount={USERLIST.length}
+                  // numSelected={selected.length}
+                  // onRequestSort={handleRequestSort}
                 />
                 <TableBody>
                   {employeeList
@@ -206,9 +236,7 @@ export default function User() {
 
                       return (
                         <TableRow
-                          hover
                           key={maCongNhan}
-                          tabIndex={-1}
                         >
                           {/* <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
@@ -220,7 +248,7 @@ export default function User() {
                           <TableCell align="left">{maCongNhan}</TableCell>
                           <TableCell align="left">{hoTen}</TableCell>
                           <TableCell align="left">{gioiTinh}</TableCell>
-                          <TableCell align="left">{ngayNamSinh}</TableCell>
+                          <TableCell align="left">{ngayNamSinh !== "1900-01-01" ? ngayNamSinh : "Chưa điền thông tin"}</TableCell>
                           <TableCell align="left">{phongBan}</TableCell>
                           <TableCell align="left">{chucVu}</TableCell>
                           <TableCell align="left">{luongBaoHiem}</TableCell>
@@ -228,16 +256,16 @@ export default function User() {
                           <TableCell align="left">{gioBatDau}</TableCell>
                           <TableCell align="left">{gioKetThuc}</TableCell>
                           <TableCell align="right">
-                            <UserMoreMenu />
+                          <UserMoreMenu />
                           </TableCell>
                         </TableRow>
                       );
                     })}
-                  {/* {emptyRows > 0 && (
+                  {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
                     </TableRow>
-                  )} */}
+                  )}
                 </TableBody>
                 {/* {isUserNotFound && (
                   <TableBody>
@@ -251,16 +279,6 @@ export default function User() {
               </Table>
             </TableContainer>
           </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={USERLIST.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </Card>
       </Container>
     </Page>
