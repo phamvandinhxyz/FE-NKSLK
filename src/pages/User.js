@@ -20,6 +20,8 @@ import {
   CircularProgress,
   Box
 } from '@mui/material';
+// eslint-disable-next-line import/no-unresolved
+import ModalPage from 'src/components/ModalPage';
 // components
 import axios from 'axios';
 import Page from '../components/Page';
@@ -84,6 +86,8 @@ export default function User() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageEmployee, setPageEmployee] = useState(1);
   const [employeeList, setEmployeeList] = useState([]);
+  const [titleModal, setTitleModal] = useState('');
+  const [openModal, setOpenModal] = useState(false);
 
   const totalEmployee = useRef(1);
 
@@ -100,10 +104,8 @@ export default function User() {
     })
     .then(res => {
       if(res.status) {
-        console.log(res.data.data);
         totalEmployee.current = res.data.total;
         setEmployeeList(res.data.data);
-        console.log(res.data.total);
       }
       else {
         console.log(res.message);
@@ -179,6 +181,7 @@ export default function User() {
 
   return (
     <Page title="Danh sách công nhân">
+      <ModalPage title={titleModal} isOpen={openModal} onClose={() => setOpenModal(false)}/>
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -187,6 +190,7 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
+            onClick={() => {setOpenModal(true); setTitleModal("Thêm công nhân mới")}}
             to="#"
             startIcon={<Icon icon={plusFill} />}
           >

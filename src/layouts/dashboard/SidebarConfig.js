@@ -13,7 +13,7 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
   {
-    title: 'dashboard',
+    title: 'Thống kê',
     path: '/dashboard/app',
     icon: getIcon(pieChart2Fill)
   },
@@ -32,21 +32,21 @@ const sidebarConfig = [
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
   },
-  {
-    title: 'login',
-    path: '/login',
-    icon: getIcon(lockFill)
-  },
+  // {
+  //   title: 'login',
+  //   path: '/login',
+  //   icon: getIcon(lockFill)
+  // },
   {
     title: 'register',
     path: '/register',
     icon: getIcon(personAddFill)
   },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: getIcon(alertTriangleFill)
-  }
+  // {
+  //   title: 'Not found',
+  //   path: '/404',
+  //   icon: getIcon(alertTriangleFill)
+  // }
 ];
 
 export default sidebarConfig;
