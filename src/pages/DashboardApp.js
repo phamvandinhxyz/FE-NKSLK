@@ -1,14 +1,15 @@
 // material
 import { Box, Grid, Container, Typography } from '@mui/material';
 // components
+import axios from "axios";
+import {useEffect, useState} from "react";
+
+import {useNavigate} from "react-router-dom";
 import Page from '../components/Page';
+
 import {
   AppTasks,
-  AppNewUsers,
-  AppBugReports,
-  AppItemOrders,
   AppNewsUpdate,
-  AppWeeklySales,
   AppOrderTimeline,
   AppCurrentVisits,
   AppWebsiteVisits,
@@ -16,10 +17,39 @@ import {
   AppCurrentSubject,
   AppConversionRates
 } from '../components/_dashboard/app';
+import SalaryProductMax from "../components/_dashboard/app/SalaryProductMax";
+import SalaryProductMin from "../components/_dashboard/app/SalaryProductMin";
+import EmployeeQuantity from "../components/_dashboard/app/EmployeeQuantity";
+import ProductQuantity from "../components/_dashboard/app/ProductQuantity";
+
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const navigate = useNavigate();
+  const [overviewData,setOverviewData] = useState({})
+
+  useEffect(()=>{
+    getOverviewDashboard()
+  },[])
+
+  const getOverviewDashboard = () =>{
+    axios({
+      method:'get',
+      url:'http://localhost:8080/api/v1/admin/thongke/tongquan',
+    }).then((res)=>{
+      if(res.data.status){
+        setOverviewData(res.data.object)
+      }else {
+        alert(res.data.message)
+      }
+    }).catch((err)=>{
+      console.log("Network Failure!!!", err);
+      navigate('/404');
+      alert('Không thể kết nối với Internet!!');
+    })
+  }
+
   return (
     <Page title="Dashboard | Minimal-UI">
       <Container maxWidth="xl">
@@ -28,16 +58,16 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+            <SalaryProductMax salaryProductMax={overviewData.luongSanPhamCaoNhat} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
+            <SalaryProductMin salaryProductMin={overviewData.luongSanPhamThapNhat} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
+            <EmployeeQuantity employeeQuantity={overviewData.soLuongCongNhan} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppBugReports />
+            <ProductQuantity productQuantity={overviewData.soLuongSanPham} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
