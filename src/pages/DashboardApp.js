@@ -28,9 +28,14 @@ import ProductQuantity from "../components/_dashboard/app/ProductQuantity";
 export default function DashboardApp() {
   const navigate = useNavigate();
   const [overviewData,setOverviewData] = useState({})
+  const [luongCongNhanTrongNam,setLuongCongNhanTrongNam] = useState({})
 
   useEffect(()=>{
     getOverviewDashboard()
+  },[])
+
+  useEffect(()=>{
+    getLuongCongNhanTrongnNam(new Date().getFullYear())
   },[])
 
   const getOverviewDashboard = () =>{
@@ -40,6 +45,23 @@ export default function DashboardApp() {
     }).then((res)=>{
       if(res.data.status){
         setOverviewData(res.data.object)
+      }else {
+        alert(res.data.message)
+      }
+    }).catch((err)=>{
+      console.log("Network Failure!!!", err);
+      navigate('/404');
+      alert('Không thể kết nối với Internet!!');
+    })
+  }
+
+  const getLuongCongNhanTrongnNam = (year) =>{
+    axios({
+      method:'get',
+      url:`http://localhost:8080/api/v1/admin/thongke/${year}/luongtrongnam`,
+    }).then((res)=>{
+      if(res.data.status){
+        setLuongCongNhanTrongNam(res.data.object)
       }else {
         alert(res.data.message)
       }
@@ -71,28 +93,27 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
+            <AppWebsiteVisits luongCongNhanTrongNam={luongCongNhanTrongNam} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits />
           </Grid>
+          {/* <Grid item xs={12} md={6} lg={8}> */}
+          {/*  <AppConversionRates /> */}
+          {/* </Grid> */}
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates />
-          </Grid>
+          {/* <Grid item xs={12} md={6} lg={4}> */}
+          {/*  <AppCurrentSubject /> */}
+          {/* </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject />
-          </Grid>
+          {/* <Grid item xs={12} md={6} lg={8}> */}
+          {/*  <AppNewsUpdate /> */}
+          {/* </Grid> */}
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline />
-          </Grid>
+          {/* <Grid item xs={12} md={6} lg={4}> */}
+          {/*  <AppOrderTimeline /> */}
+          {/* </Grid> */}
 
           <Grid item xs={12} md={6} lg={4}>
             <AppTrafficBySite />
