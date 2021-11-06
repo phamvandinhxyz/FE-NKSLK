@@ -29,14 +29,16 @@ export default function DashboardApp() {
   const navigate = useNavigate();
   const [overviewData,setOverviewData] = useState({})
   const [luongCongNhanTrongNam,setLuongCongNhanTrongNam] = useState({})
+  const [soLuongCongNhanChungRieng,setSoLuongCongNhanChungRieng] = useState({})
 
   useEffect(()=>{
     getOverviewDashboard()
   },[])
 
   useEffect(()=>{
-    getLuongCongNhanTrongnNam(new Date().getFullYear())
+    getLuongCongNhanTrongNam(new Date().getFullYear())
   },[])
+
 
   const getOverviewDashboard = () =>{
     axios({
@@ -55,7 +57,7 @@ export default function DashboardApp() {
     })
   }
 
-  const getLuongCongNhanTrongnNam = (year) =>{
+  const getLuongCongNhanTrongNam = (year) =>{
     axios({
       method:'get',
       url:`http://localhost:8080/api/v1/admin/thongke/${year}/luongtrongnam`,
@@ -119,9 +121,9 @@ export default function DashboardApp() {
             <AppTrafficBySite />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks />
-          </Grid>
+          {/* <Grid item xs={12} md={6} lg={8}> */}
+          {/*  <AppTasks /> */}
+          {/* </Grid> */}
         </Grid>
       </Container>
     </Page>

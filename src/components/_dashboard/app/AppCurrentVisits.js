@@ -1,4 +1,8 @@
 import { merge } from 'lodash';
+import {useEffect, useState} from "react";
+import axios from "axios";
+
+
 import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
@@ -31,10 +35,16 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [4344, 5435, 1443, 4443];
 
-export default function AppCurrentVisits() {
+export default function AppCurrentVisits(props) {
+  const [chartData,setChartData] = useState([])
   const theme = useTheme();
+
+
+  useEffect(()=>{
+    getSoLuongCongNhanChungRieng()
+  },[])
+
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
@@ -43,7 +53,7 @@ export default function AppCurrentVisits() {
       theme.palette.warning.main,
       theme.palette.error.main
     ],
-    labels: ['America', 'Asia', 'Europe', 'Africa'],
+    labels: ['Riêng', 'Chung'],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
@@ -61,11 +71,28 @@ export default function AppCurrentVisits() {
     }
   });
 
+
+
+  const getSoLuongCongNhanChungRieng = () =>{
+    axios({
+      method:'get',
+      url:`http://localhost:8080/api/v1/admin/thongke/soLuongCongNhanChungRieng`,
+    }).then((res)=>{
+      if(res.data.status){
+        setChartData(Object.values(res.data.object))
+      }else {
+        alert(res.data.message)
+      }
+    }).catch((err)=>{
+      console.log("Network Failure!!!", err);
+    })
+  }
+
   return (
     <Card>
-      <CardHeader title="Current Visits" />
+      <CardHeader title="Số lượng công nhân" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="pie" series={chartData.length > 0 ? chartData : [1,0]} options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );
