@@ -23,7 +23,7 @@ const sidebarConfig = [
     icon: getIcon(peopleFill)
   },
   {
-    title: 'product',
+    title: 'Danh sách sản phẩm',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   },
