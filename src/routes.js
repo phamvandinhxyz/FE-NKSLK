@@ -10,6 +10,7 @@ import Products from './pages/product/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
+import NKSLK from "./pages/nkslk/NKSLK";
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
+        { path: 'nkslk', element: <NKSLK /> },
         { path: 'blog', element: <Blog /> }
       ]
     },

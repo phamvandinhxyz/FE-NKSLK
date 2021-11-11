@@ -18,6 +18,11 @@ const sidebarConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
+    title: 'NKSLK',
+    path: '/dashboard/nkslk',
+    icon: getIcon(fileTextFill)
+  },
+  {
     title: 'Danh sách công nhân',
     path: '/dashboard/user',
     icon: getIcon(peopleFill)
@@ -27,11 +32,11 @@ const sidebarConfig = [
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   },
-  {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: getIcon(fileTextFill)
-  },
+  // {
+  //   title: 'blog',
+  //   path: '/dashboard/blog',
+  //   icon: getIcon(fileTextFill)
+  // },
   // {
   //   title: 'login',
   //   path: '/login',
