@@ -31,12 +31,15 @@ import Scrollbar from '../../components/Scrollbar';
 import { UserListHead, UserMoreMenu } from '../../components/_dashboard/user';
 import ModalAddProduct from "../product/ModalAddProduct";
 import SearchNKSLKComponent from "./SearchNKSLKComponent";
+import ModalDetailNKSLK from "./ModalDetailNKSLK";
+import ModalAddNKSLK from "./ModalAddNKSLK";
+import DialogDeleteNKSLK from "./DialogDeleteNKSLK";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
     { id: 'id', label: 'Mã NKSLK', alignRight: false },
-    { id: 'ngayThucHien', label: 'Ngày thự hiện', alignRight: false },
+    { id: 'ngayThucHien', label: 'Ngày thực hiện', alignRight: false },
     { id: 'tenCongViec', label: 'Tên công việc', alignRight: false },
     { id: 'soCongNhan', label: 'Số công nhân', alignRight: false },
     { id: 'gioBatDau', label: 'Giờ bắt đầu', alignRight: false },
@@ -57,8 +60,15 @@ function NKSLK() {
     const [titleModal, setTitleModal] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [NKSLKResultSearch, setNKSLKResultSearch] = useState(null);
+    const [openModalDetailNKSLK,setOpenModalDetailNKSLK] = useState(false)
+    const [openModalAddNKSLK,setOpenModalAddNKSLK] = useState(false)
+    const [currentNKSLK,setCurrentNKSLK] = useState(null)
+
+    const [openModalDeleteNKSLK,setOpenModalDeleteNKSLK] = useState(false)
 
     const [keySearch,setKeySearch] = useState("")
+
+    const [typeClick,setTypeClick] = useState("view")
 
     const totalRecord = useRef(1);
 
@@ -66,14 +76,14 @@ function NKSLK() {
 
     useEffect(() => {
         getEmployees();
-    }, [pageNKSLK, rowsPerPage,openModal])
+    }, [pageNKSLK, rowsPerPage,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
 
 
     useEffect(() => {
-        if(keySearch !== ""){
+        if(keySearch !== "" && NKSLKResultSearch !== null){
             searchNKSLKReLoad(keySearch)
         }
-    }, [pageNKSLKSearchResult, rowsPerPage,openModal])
+    }, [rowsPerPage,openModal,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
 
     const getEmployees = () => {
         axios({
@@ -118,6 +128,7 @@ function NKSLK() {
         }
         else {
             setNKSLKResultSearch(null)
+            setPageNKSLK(1)
             getEmployees()
         }
     }
@@ -170,9 +181,21 @@ function NKSLK() {
 
     // const isUserNotFound = filteredUsers.length === 0;
 
+    const openModalDetail = (o) => {
+        setCurrentNKSLK(o)
+        setOpenModalDetailNKSLK(true)
+    }
+
+    const openDialogDelete = (o) => {
+        setCurrentNKSLK(o)
+        setOpenModalDeleteNKSLK(true)
+    }
+
     return (
         <Page title="Danh sách NKSLK">
-            <ModalAddProduct total={totalRecord.current} title={titleModal} isOpen={openModal} onClose={() => setOpenModal(false)}/>
+             <ModalDetailNKSLK type={typeClick} currentNKSLK={currentNKSLK} visible={openModalDetailNKSLK} onClose={()=>{setOpenModalDetailNKSLK(false)}}  />
+             <ModalAddNKSLK visible={openModalAddNKSLK} onClose={()=>{setOpenModalAddNKSLK(false)}}  />
+             <DialogDeleteNKSLK visible={openModalDeleteNKSLK} currentNKSLK={currentNKSLK} onClose={()=>{setOpenModalDeleteNKSLK(false)}} />
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
@@ -181,7 +204,7 @@ function NKSLK() {
                     <Button
                         variant="contained"
                         component={RouterLink}
-                        onClick={() => {setOpenModal(true); setTitleModal("Thêm sản phẩm mới")}}
+                        onClick={() => {setOpenModalAddNKSLK(true)}}
                         to="#"
                         startIcon={<Icon icon={plusFill} />}
                     >
@@ -235,16 +258,15 @@ function NKSLK() {
                                                         <TableRow
                                                             key={nkslk.maNKSLK}
                                                             hover='true'
-                                                            onClick={()=>{alert(nkslk.maNKSLK)}}
                                                         >
-                                                            <TableCell align="left">{nkslk.maNKSLK}</TableCell>
-                                                            <TableCell align="left">{nkslk.ngayThucHien}</TableCell>
-                                                            <TableCell align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
-                                                            <TableCell align="left">{congNhans.length}</TableCell>
-                                                            <TableCell align="left">{nkslk.gioBatDau}</TableCell>
-                                                            <TableCell align="left">{nkslk.gioKetThuc}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.maNKSLK}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.ngayThucHien}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans.length}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">
-                                                                <UserMoreMenu />
+                                                                <UserMoreMenu openDialogDelete={()=>{openDialogDelete(nk)}} openModalDetail={()=>{setTypeClick("edit");openModalDetail(nk)}} />
                                                             </TableCell>
                                                         </TableRow>
                                                     );
@@ -258,14 +280,14 @@ function NKSLK() {
                                                             key={nkslk.maNKSLK}
                                                             hover='true'
                                                         >
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{nkslk.maNKSLK}</TableCell>
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{nkslk.ngayThucHien}</TableCell>
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{congNhans.length}</TableCell>
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{nkslk.gioBatDau}</TableCell>
-                                                            <TableCell onClick={()=>{alert(nkslk.maNKSLK)}} align="left">{nkslk.gioKetThuc}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.maNKSLK}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.ngayThucHien}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans.length}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">
-                                                                <UserMoreMenu />
+                                                                <UserMoreMenu openDialogDelete={()=>{openDialogDelete(nk)}} openModalDetail={()=>{setTypeClick("edit");openModalDetail(nk)}} />
                                                             </TableCell>
                                                         </TableRow>
                                                     );

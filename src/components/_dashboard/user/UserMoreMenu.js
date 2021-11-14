@@ -9,7 +9,7 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu() {
+export default function UserMoreMenu(props) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,14 +33,14 @@ export default function UserMoreMenu() {
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{props.openDialogDelete()}} />
         </MenuItem>
 
         <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{props.openModalDetail()}} />
         </MenuItem>
       </Menu>
     </>
