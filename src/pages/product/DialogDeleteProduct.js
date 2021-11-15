@@ -19,7 +19,6 @@ function DialogDeleteProduct(props) {
     const [openNotification, setOpenNotification] = React.useState(false);
     const [notification, setNotification] = React.useState("");
 
-
     useEffect(()=>{
         console.log(props.currentProduct)
     },[props.currentProduct])

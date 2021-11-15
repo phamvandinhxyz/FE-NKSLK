@@ -30,6 +30,9 @@ import Scrollbar from '../../components/Scrollbar';
 // import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import ModalAddProduct from "./ModalAddProduct";
+import ModalDetailProduct from "./ModalDetailProduct";
+import DialogDeleteProduct from "./DialogDeleteProduct";
+import SearchProduct from "./SearchProduct";
 
 // ----------------------------------------------------------------------
 
@@ -56,8 +59,13 @@ function Products() {
   const [titleModal, setTitleModal] = useState('');
   const [openModal, setOpenModal] = useState(false);
 
-  const totalEmployee = useRef(1);
+  const [openModalDetailProduct,setOpenModalDetailProduct] = useState(false)
+  const [currentProduct,setCurrentProduct] = useState(null)
 
+  const [openModalAddProduct,setOpenModalAddProduct] = useState(false)
+  const [openModalDeleteProduct,setOpenModalDeleteProduct] = useState(false)
+  const totalEmployee = useRef(1);
+  const [typeClick,setTypeClick] = useState("view")
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -113,9 +121,19 @@ function Products() {
   // const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
   // const isUserNotFound = filteredUsers.length === 0;
+  const openModalDetail = (o) => {
+    setCurrentProduct(o)
+    setOpenModalDetailProduct(true)
+  }
 
+  const openDialogDelete = (o) => {
+    setCurrentProduct(o)
+    setOpenModalDeleteProduct(true)
+  }
   return (
       <Page title="Danh sách sản phẩm">
+        <ModalDetailProduct type={typeClick} currentProduct={currentProduct} visible={openModalDetailProduct} onClose={()=>{setOpenModalDetailProduct(false)}}  />
+        <DialogDeleteProduct visible={openModalDeleteProduct} currentProduct={currentProduct} onClose={()=>{setOpenModalDeleteProduct(false)}} />
         <ModalAddProduct total={totalEmployee.current} title={titleModal} isOpen={openModal} onClose={() => setOpenModal(false)}/>
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -179,41 +197,28 @@ function Products() {
                               <TableRow
                                   key={maSanPham}
                               >
-                                {/* <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2" noWrap>
-                                {maCongNhan}
-                              </Typography>
-                            </Stack>
-                          </TableCell> */}
-                                <TableCell align="left">{maSanPham}</TableCell>
-                                <TableCell align="left">{tenSanPham}</TableCell>
-                                <TableCell align="left">{ngaySanXuat}</TableCell>
-                                <TableCell align="left">{ngayDangKy}</TableCell>
-                                <TableCell align="left">{soDangKy}</TableCell>
-                                <TableCell align="left">{hanSuDung.split("T")[0]}</TableCell>
-                                <TableCell align="left">{quyCach}</TableCell>
-                                <TableCell align="right">
-                                  <UserMoreMenu />
-                                </TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.maSanPham}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.tenSanPham}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.ngaySanXuat}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.ngayDangKy}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.soDangKy}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.hanSuDung}</TableCell>
+                          <TableCell onClick={()=>{setTypeClick("view");openModalDetail(product)}} align="left">{product.quyCach}</TableCell>
+
+                          <TableCell align="right">
+                            <UserMoreMenu openDialogDelete={()=>{openDialogDelete(product)}} openModalDetail={()=>{setTypeClick("edit");openModalDetail(nk)}} />
+                          </TableCell>
                               </TableRow>
                           );
-                        })}
+                        })
+                    }
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
                           <TableCell colSpan={6} />
                         </TableRow>
                     )}
                   </TableBody>
-                  {/* {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )} */}
+                  {}
                 </Table>
               </TableContainer>
             </Scrollbar>
