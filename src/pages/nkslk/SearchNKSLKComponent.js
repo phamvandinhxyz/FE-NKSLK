@@ -12,10 +12,15 @@ import {
     IconButton,
     Typography,
     OutlinedInput,
-    InputAdornment
+    InputAdornment, TextField
 } from '@mui/material';
-import {useState} from "react";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import React, {useState} from "react";
 import axios from "axios";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DatePicker from "@mui/lab/DatePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 // ----------------------------------------------------------------------
 
@@ -50,10 +55,29 @@ SearchNKSLKComponent.propTypes = {
 export default function SearchNKSLKComponent({ numSelected, filterName, onFilterName, onSearch }) {
 
     const [keyWord,setKeyWord] = useState('')
+    const [filter,setFilter] = useState("")
+    const [timeFilter,setTimeFilter] = useState(null)
+    const [viewDatePicker,setViewDatePicker] = useState(["year","month","day"])
+    const [formatDatePicker,setFormatDatePicker] = useState("MM/dd/yyyy")
 
     const onChange = (e) => {
         onSearch(e.target.value)
         setKeyWord(e.target.value)
+    }
+
+    const setYearDatePicker = () => {
+        setViewDatePicker(["year"])
+        setFormatDatePicker("yyyy")
+    }
+
+    const setMonthDatePicker = () => {
+        setViewDatePicker(["year","month"])
+        setFormatDatePicker("MM/yyyy")
+    }
+
+    const setDayDatePicker = () => {
+        setViewDatePicker(["year","month","day"])
+        setFormatDatePicker("MM/dd/yyyy")
     }
 
 
@@ -83,19 +107,29 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
                 />
             )}
 
-            {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton>
-                        <Icon icon={trash2Fill} />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton>
-                        <Icon icon={roundFilterList} />
-                    </IconButton>
-                </Tooltip>
-            )}
+            <Stack spacing={2} direction="row">
+                <Button variant="contained" disabled={ filter === 'nam' || false } onClick={()=>{setYearDatePicker();setFilter("nam")}}>Năm</Button>
+                <Button variant="contained" disabled={ filter === 'thang' || false } onClick={()=>{setMonthDatePicker();setFilter("thang")}}>Tháng</Button>
+                <Button variant="contained" disabled={ filter === 'tuan' || false } onClick={()=>{setDayDatePicker();setFilter("tuan")}}>Tuần</Button>
+
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        disabled={ filter === "" || false }
+                        label=""
+                        value={timeFilter}
+                        inputFormat={formatDatePicker}
+                        views={viewDatePicker}
+                        onChange={(newValue) => {
+                            setTimeFilter(newValue)
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                </LocalizationProvider>
+
+
+                <Button variant="contained" onClick={()=>{setDayDatePicker();setFilter("");setTimeFilter(null)}}>Huỷ</Button>
+            </Stack>
+
         </RootStyle>
     );
 }
