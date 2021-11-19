@@ -70,12 +70,18 @@ function NKSLK() {
 
     const [typeClick,setTypeClick] = useState("view")
 
+    // Filter
+    const [keyFilter,setKeyFilter] = useState("")
+    const [typeFilter,setTypeFilter] = useState(0)
+
+
+
     const totalRecord = useRef(1);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        getEmployees();
+        getNKSLKs();
     }, [pageNKSLK, rowsPerPage,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
 
 
@@ -83,9 +89,15 @@ function NKSLK() {
         if(keySearch !== "" && NKSLKResultSearch !== null){
             searchNKSLKReLoad(keySearch)
         }
-    }, [rowsPerPage,openModal,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
+    }, [rowsPerPage,page,rowsPerPage,openModal,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
 
-    const getEmployees = () => {
+    useEffect(() => {
+        if(keyFilter !== "" && typeFilter !== 0 && NKSLKResultSearch !== null){
+            filterNKSLKReload(typeFilter,keyFilter)
+        }
+    }, [rowsPerPage,page,rowsPerPage,openModal,openModalDetailNKSLK,openModalAddNKSLK,openModalDeleteNKSLK])
+
+    const getNKSLKs = () => {
         axios({
             method: 'get',
             url: `http://localhost:8080/api/v1/admin/nkslk?page=${pageNKSLK}&size=${rowsPerPage}`,
@@ -129,7 +141,59 @@ function NKSLK() {
         else {
             setNKSLKResultSearch(null)
             setPageNKSLK(1)
-            getEmployees()
+            getNKSLKs()
+        }
+    }
+
+    const filterNKSLK = (type,s) => {
+        if(s !== ""){
+            setTypeFilter(type)
+            setKeyFilter(s)
+            axios.get(`http://localhost:8080/api/v1/admin/nkslk/${type}/${s}/filter`
+            )
+                .then(res => {
+                    if (res.status) {
+                        totalRecord.current = res.data.total;
+                        setNKSLKResultSearch(res.data.data)
+                    } else {
+                        console.log(res.message);
+                        alert(res.message);
+                    }
+                })
+                .catch(e => {
+                    console.log("Network Failure!!!", e);
+                    alert('Không thể kết nối với Internet!!');
+                })
+        }
+        else {
+            setNKSLKResultSearch(null)
+            setPageNKSLK(1)
+            getNKSLKs()
+        }
+    }
+
+    const filterNKSLKReload = (type,s) => {
+        if(s !== ""){
+            axios.get(`http://localhost:8080/api/v1/admin/nkslk/${type}/${s}/filter?page=${pageNKSLKSearchResult}&size=${rowsPerPage}`
+            )
+                .then(res => {
+                    if (res.status) {
+                        totalRecord.current = res.data.total;
+                        setNKSLKResultSearch(res.data.data)
+                    } else {
+                        console.log(res.message);
+                        alert(res.message);
+                    }
+                })
+                .catch(e => {
+                    console.log("Network Failure!!!", e);
+                    alert('Không thể kết nối với Internet!!');
+                })
+        }
+        else {
+            setNKSLKResultSearch(null)
+            setPageNKSLK(1)
+            getNKSLKs   ()
         }
     }
 
@@ -217,6 +281,7 @@ function NKSLK() {
                         numSelected={selected.length}
                         filterName={filterName}
                         onSearch={(id)=>{searchNKSLK(id)}}
+                        onFilter={(type,s)=>{filterNKSLK(type,s)}}
                         // onFilterName={handleFilterByName}
                     />
                     {
@@ -283,7 +348,7 @@ function NKSLK() {
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.maNKSLK}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.ngayThucHien}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
-                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans.length}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans[0].maDanhMucCongNhan !== null ? congNhans.length : 0}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">

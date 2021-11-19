@@ -52,10 +52,10 @@ SearchNKSLKComponent.propTypes = {
     onFilterName: PropTypes.func
 };
 
-export default function SearchNKSLKComponent({ numSelected, filterName, onFilterName, onSearch }) {
+export default function SearchNKSLKComponent({ numSelected, filterName, onFilterName, onSearch, onFilter }) {
 
     const [keyWord,setKeyWord] = useState('')
-    const [filter,setFilter] = useState("")
+    const [filter,setFilter] = useState(0)
     const [timeFilter,setTimeFilter] = useState(null)
     const [viewDatePicker,setViewDatePicker] = useState(["year","month","day"])
     const [formatDatePicker,setFormatDatePicker] = useState("MM/dd/yyyy")
@@ -63,6 +63,11 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
     const onChange = (e) => {
         onSearch(e.target.value)
         setKeyWord(e.target.value)
+    }
+
+    const onChangeFilter = (s) => {
+        onFilter(filter,s)
+        setTimeFilter(s)
     }
 
     const setYearDatePicker = () => {
@@ -79,6 +84,10 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
         setViewDatePicker(["year","month","day"])
         setFormatDatePicker("MM/dd/yyyy")
     }
+
+    function convertToDateSql(date){
+        return new Date(date).toISOString().split('T')[0]
+    };
 
 
     return (
@@ -108,19 +117,19 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
             )}
 
             <Stack spacing={2} direction="row">
-                <Button variant="contained" disabled={ filter === 'nam' || false } onClick={()=>{setYearDatePicker();setFilter("nam")}}>Năm</Button>
-                <Button variant="contained" disabled={ filter === 'thang' || false } onClick={()=>{setMonthDatePicker();setFilter("thang")}}>Tháng</Button>
-                <Button variant="contained" disabled={ filter === 'tuan' || false } onClick={()=>{setDayDatePicker();setFilter("tuan")}}>Tuần</Button>
+                <Button variant="contained" disabled={ filter === 3 || false } onClick={()=>{setYearDatePicker();setFilter(3)}}>Năm</Button>
+                <Button variant="contained" disabled={ filter === 2 || false } onClick={()=>{setMonthDatePicker();setFilter(2)}}>Tháng</Button>
+                <Button variant="contained" disabled={ filter === 1 || false } onClick={()=>{setDayDatePicker();setFilter(1)}}>Tuần</Button>
 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
-                        disabled={ filter === "" || false }
-                        label=""
+                        disabled={ filter === 0 || false }
+                        label="Ngày thực hiện khoán"
                         value={timeFilter}
                         inputFormat={formatDatePicker}
                         views={viewDatePicker}
                         onChange={(newValue) => {
-                            setTimeFilter(newValue)
+                            onChangeFilter(convertToDateSql(newValue))
                         }}
                         renderInput={(params) => <TextField {...params} />}
                     />

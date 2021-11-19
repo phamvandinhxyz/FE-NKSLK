@@ -14,6 +14,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 import axios from "axios";
+import ModalDisplayEmployeeNKSLK from "./employee/ModalDisplayEmployeeNKSLK";
 
 const Alert = React.forwardRef((props, ref) => (
      <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -55,6 +56,7 @@ function ModalDetailNKSLK(props) {
     const [openNotification, setOpenNotification] = React.useState(false);
     const [notification, setNotification] = React.useState("");
 
+    const [visibleModalEmployee,setVisibleModalEmployee] = useState(false)
 
     useEffect(()=>{
         if(props.type === "edit"){
@@ -72,10 +74,14 @@ function ModalDetailNKSLK(props) {
                 setDonGia(props.currentNKSLK.danhMucCongViec.donGia)
             }else setMaCongViec(null)
 
-            if(props.currentNKSLK.congNhans.lengh > 0){
+            if(props.currentNKSLK.congNhans.length > 0 && props.currentNKSLK.congNhans[0].maDanhMucCongNhan !== null){
                 setMaDanhMucCongNhan(props.currentNKSLK.congNhans[0].maDanhMucCongNhan)
                 setSoLuongCongNhan(props.currentNKSLK.congNhans.length)
-            }else setMaDanhMucCongNhan(null)
+            }else
+            {
+                setMaDanhMucCongNhan(null)
+                setSoLuongCongNhan(0)
+            }
 
             setNgayThucHien(props.currentNKSLK.nkslk.ngayThucHien)
             setMaNKSLK(props.currentNKSLK.nkslk.maNKSLK)
@@ -263,8 +269,37 @@ function ModalDetailNKSLK(props) {
         updateNKSLK(o)
     }
 
+    const updateQuantityEmployee = (maDMCN) =>{
+        getEmployees(maDMCN)
+    }
+
+    const getEmployees = (maDanhMucCongNhan) => {
+        axios({
+            method: 'get',
+            url: `http://localhost:8080/api/v1/admin/dmcn/${maDanhMucCongNhan}`,
+        })
+            .then(res => {
+                if(res.status) {
+                    setSoLuongCongNhan(res.data.data[0].congNhans.length)
+                }
+                else {
+                    console.log(res.message);
+                    alert(res.message);
+                }
+            })
+            .catch(e => {
+                console.log("Network Failure!!!", e);
+                alert('Không thể kết nối với Internet!!');
+            })
+    }
+
     return(
         <div>
+            {
+                maDanhMucCongNhan !== null ?
+                    <ModalDisplayEmployeeNKSLK updateQuantityEmployee={()=>{updateQuantityEmployee(maDanhMucCongNhan)}} visible={visibleModalEmployee} maDanhMucCongNhan={maDanhMucCongNhan} onClose={()=>{setVisibleModalEmployee(!visibleModalEmployee)}} />
+                    : null
+            }
             <Modal open={props.visible} onClose={()=>{props.onClose()}}>
                 <Box sx={style} component="form">
                     <Typography id="modal-modal-title" variant="h6" component="h2" style={{marginBottom:"30px"}}>
@@ -421,8 +456,9 @@ function ModalDetailNKSLK(props) {
                         <TextField
                             id="outlined-required"
                             label="Số lượng công nhân"
-                            disabled="true"
+                            editabled="true"
                             value={soLuongCongNhan}
+                            onClick={()=>{setVisibleModalEmployee(true)}}
                         />
                     </div>
                     {
