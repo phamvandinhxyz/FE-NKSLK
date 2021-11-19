@@ -74,8 +74,16 @@ function ModalDetailNKSLK(props) {
                 setDonGia(props.currentNKSLK.danhMucCongViec.donGia)
             }else setMaCongViec(null)
 
-            if(props.currentNKSLK.congNhans.length > 0 && props.currentNKSLK.congNhans[0].maDanhMucCongNhan !== null){
-                setMaDanhMucCongNhan(props.currentNKSLK.congNhans[0].maDanhMucCongNhan)
+            if(props.currentNKSLK.congNhans.length > 0 ){
+                if(props.currentNKSLK.congNhans[0].maDanhMucCongNhan != null){
+                    setMaDanhMucCongNhan(props.currentNKSLK.congNhans[0].maDanhMucCongNhan)
+                    setSoLuongCongNhan(props.currentNKSLK.congNhans.length)
+                }else {
+                    setMaDanhMucCongNhan(null)
+                    setSoLuongCongNhan(0)
+                }
+            }else if(props.currentNKSLK.congNhans.length === 0){
+                setMaDanhMucCongNhan(props.currentNKSLK.nkslk.danhMucNhanCong)
                 setSoLuongCongNhan(props.currentNKSLK.congNhans.length)
             }else
             {

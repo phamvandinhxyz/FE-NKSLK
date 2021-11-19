@@ -327,7 +327,7 @@ function NKSLK() {
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.maNKSLK}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.ngayThucHien}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
-                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans.length}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.danhMucNhanCong !== null ? congNhans.length : 0}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">
@@ -348,7 +348,7 @@ function NKSLK() {
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.maNKSLK}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.ngayThucHien}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{danhMucCongViec !== null ? danhMucCongViec.tenCongViec : null }</TableCell>
-                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{congNhans[0].maDanhMucCongNhan !== null ? congNhans.length : 0}</TableCell>
+                                                            <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.danhMucNhanCong !== null ? congNhans.length : 0}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">
