@@ -23,7 +23,7 @@ export default function AppWebsiteVisits(props) {
     {
       name: 'Lương công nhân',
       type: 'line',
-      data: Object.values(props.luongCongNhanTrongNam).slice(0,new Date().getMonth())
+      data: Object.values(props.luongCongNhanTrongNam).slice(0,new Date().getMonth() + 1)
     }
   ];
 
