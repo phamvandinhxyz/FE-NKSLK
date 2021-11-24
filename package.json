@@ -45,6 +45,7 @@
     "@mui/lab": "^5.0.0-alpha.47",
     "@mui/material": "^5.0.0",
     "@mui/utils": "^5.0.0",
+    "@mui/x-data-grid": "^5.0.1",
     "@testing-library/jest-dom": "^5.14.1",
     "apexcharts": "^3.28.3",
     "axios": "^0.24.0",

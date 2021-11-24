@@ -288,7 +288,7 @@ function NKSLK() {
                         totalRecord.current > 0
                             ?
                             <TablePagination
-                                labelRowsPerPage="Số sản phẩm mỗi trang"
+                                labelRowsPerPage="Số bản ghi mỗi trang"
                                 rowsPerPageOptions={[5, 10, 25]}
                                 component="div"
                                 count={totalRecord.current}

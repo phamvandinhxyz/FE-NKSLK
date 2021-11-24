@@ -46,24 +46,18 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-SearchNKSLKComponent.propTypes = {
+FilterBLSPComponent.propTypes = {
     numSelected: PropTypes.number,
     filterName: PropTypes.string,
     onFilterName: PropTypes.func
 };
 
-export default function SearchNKSLKComponent({ numSelected, filterName, onFilterName, onSearch, onFilter }) {
+export default function FilterBLSPComponent({ numSelected, filterName, onFilterName, onSearch, onFilter, getBangLuongSanPham }) {
 
-    const [keyWord,setKeyWord] = useState('')
     const [filter,setFilter] = useState(0)
     const [timeFilter,setTimeFilter] = useState(null)
     const [viewDatePicker,setViewDatePicker] = useState(["year","month","day"])
     const [formatDatePicker,setFormatDatePicker] = useState("MM/dd/yyyy")
-
-    const onChange = (e) => {
-        onSearch(e.target.value)
-        setKeyWord(e.target.value)
-    }
 
     const onChangeFilter = (s) => {
         onFilter(filter,s)
@@ -99,22 +93,6 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
                 })
             }}
         >
-            {numSelected > 0 ? (
-                <Typography component="div" variant="subtitle1">
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <SearchStyle
-                    value={keyWord}
-                    onChange={(e)=>{onChange(e)}}
-                    placeholder="Search ..."
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
-                        </InputAdornment>
-                    }
-                />
-            )}
 
             <Stack spacing={2} direction="row">
                 <Button variant="contained" disabled={ filter === 3 || false } onClick={()=>{setYearDatePicker();setFilter(3)}}>Năm</Button>
@@ -124,7 +102,7 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         disabled={ filter === 0 || false }
-                        label="Ngày thực hiện khoán"
+                        label="Lọc"
                         value={timeFilter}
                         inputFormat={formatDatePicker}
                         views={viewDatePicker}
@@ -136,7 +114,7 @@ export default function SearchNKSLKComponent({ numSelected, filterName, onFilter
                 </LocalizationProvider>
 
 
-                <Button variant="contained" onClick={()=>{setDayDatePicker();setFilter(0);setTimeFilter(null)}}>Huỷ</Button>
+                <Button variant="contained" onClick={()=>{setDayDatePicker();setFilter(0);setTimeFilter(null);getBangLuongSanPham()}}>Huỷ</Button>
             </Stack>
 
         </RootStyle>

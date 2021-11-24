@@ -23,6 +23,11 @@ const sidebarConfig = [
     icon: getIcon(fileTextFill)
   },
   {
+    title: 'Bảng lương sản phẩm',
+    path: '/dashboard/blsp',
+    icon: getIcon(fileTextFill)
+  },
+  {
     title: 'Danh sách công nhân',
     path: '/dashboard/user',
     icon: getIcon(peopleFill)

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
@@ -11,6 +13,7 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import NKSLK from "./pages/nkslk/NKSLK";
+import BangLuongSanPham from "./pages/bangLuongSanPham/BangLuongSanPham";
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +28,7 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'nkslk', element: <NKSLK /> },
+        { path: 'blsp', element: <BangLuongSanPham /> },
         { path: 'blog', element: <Blog /> }
       ]
     },
