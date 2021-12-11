@@ -141,6 +141,7 @@ function NavItem({ item, active }) {
       sx={{
         ...(isActiveRoot && activeRootStyle)
       }}
+      style={{display: 'flex'}}
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
