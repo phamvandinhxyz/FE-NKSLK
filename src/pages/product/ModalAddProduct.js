@@ -20,7 +20,7 @@ const style = {
 };
 
 
-function ModalAddProduct({total, title, isOpen, onClose}) {
+function ModalAddProduct({total, title, isOpen, onClose, productDetail}) {
 
     const [maSanPham, setMaSanPham] = useState('');
     const [tenSanPham, setTenSanPham] = useState('');
@@ -29,6 +29,7 @@ function ModalAddProduct({total, title, isOpen, onClose}) {
     const [ngayDangKy, setNgayDangKy] = useState('');
     const [soDangKy, setSoDangKy] = useState('');
     const [quyCach, setQuyCach] = useState('');
+    console.log(productDetail);
 
     const oncloseModal = () =>{
         setMaSanPham('')
@@ -94,9 +95,9 @@ function ModalAddProduct({total, title, isOpen, onClose}) {
                     <div>
                         <TextField
                             required
-                            autoFocus="true"
                             id="outlined-required"
                             label="Tên sản phẩm"
+                            // defaultValue={productDetail.tenSanPham}
                             onChange={event => {
                                 const {value} = event.target;
                                 setTenSanPham(value);

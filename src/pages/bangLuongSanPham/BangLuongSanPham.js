@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from "react";
 import axios from "axios";
+// eslint-disable-next-line import/no-unresolved
 import { DataGrid } from '@mui/x-data-grid';
 import {
     Box,

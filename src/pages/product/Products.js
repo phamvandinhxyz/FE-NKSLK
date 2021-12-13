@@ -30,6 +30,7 @@ import Scrollbar from '../../components/Scrollbar';
 // import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 import ModalAddProduct from "./ModalAddProduct";
+// import products from 'src/_mocks_/products';
 
 // ----------------------------------------------------------------------
 
@@ -194,7 +195,7 @@ function Products() {
                                 <TableCell align="left">{hanSuDung.split("T")[0]}</TableCell>
                                 <TableCell align="left">{quyCach}</TableCell>
                                 <TableCell align="right">
-                                  <UserMoreMenu />
+                                  <UserMoreMenu idSP = {product.maSanPham} productDetail={product}/>
                                 </TableCell>
                               </TableRow>
                           );

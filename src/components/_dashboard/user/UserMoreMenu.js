@@ -6,15 +6,19 @@ import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+// eslint-disable-next-line import/no-unresolved
+import ModalAddProduct from 'src/pages/product/ModalAddProduct';
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu(props) {
+export default function UserMoreMenu({idSP, productDetail}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <>
+      <ModalAddProduct title="ChangeProductDetail" productDetail={productDetail} isOpen={openModal} onClose={() => setOpenModal(false)}/>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
         <Icon icon={moreVerticalFill} width={20} height={20} />
       </IconButton>
@@ -33,14 +37,14 @@ export default function UserMoreMenu(props) {
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{props.openDialogDelete()}} />
+          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{alert(`Đã xoá sản phẩm có mã ${idSP}`);}} />
         </MenuItem>
 
         <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{props.openModalDetail()}} />
+          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} onClick={()=>{setOpenModal(true)}} />
         </MenuItem>
       </Menu>
     </>
