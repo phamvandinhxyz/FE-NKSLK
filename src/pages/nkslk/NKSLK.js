@@ -34,6 +34,7 @@ import SearchNKSLKComponent from "./SearchNKSLKComponent";
 import ModalDetailNKSLK from "./ModalDetailNKSLK";
 import ModalAddNKSLK from "./ModalAddNKSLK";
 import DialogDeleteNKSLK from "./DialogDeleteNKSLK";
+import UserMoreMenuNKSLK from "./UserMoreMenuNKSLK";
 
 // ----------------------------------------------------------------------
 
@@ -352,7 +353,7 @@ function NKSLK() {
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioBatDau}</TableCell>
                                                             <TableCell onClick={()=>{setTypeClick("view");openModalDetail(nk)}} align="left">{nkslk.gioKetThuc}</TableCell>
                                                             <TableCell align="right">
-                                                                <UserMoreMenu openDialogDelete={()=>{openDialogDelete(nk)}} openModalDetail={()=>{setTypeClick("edit");openModalDetail(nk)}} />
+                                                                <UserMoreMenuNKSLK openDialogDelete={()=>{openDialogDelete(nk)}} openModalDetail={()=>{setTypeClick("edit");openModalDetail(nk)}} />
                                                             </TableCell>
                                                         </TableRow>
                                                     );
