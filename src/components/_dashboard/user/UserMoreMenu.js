@@ -17,10 +17,11 @@ export default function UserMoreMenu({idSP, productDetail, idUser, userDetail, t
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  console.log(userDetail);
 
   return (
     <>
-      {title === "Chỉnh sửa thông tin" ? <ModalPage title={title} isOpen={openModal} onClose={() => setOpenModal(false)}/> : <ModalAddProduct title= {title === "Chỉnh sửa thông tin" ? title : "ChangeProductDetail"} productDetail={productDetail} isOpen={openModal} onClose={() => setOpenModal(false)}/>}
+      {title === "Chỉnh sửa thông tin" ? <ModalPage title={title} isOpen={openModal} onClose={() => setOpenModal(false)} userDetail={userDetail} idUser={idUser} /> : <ModalAddProduct title= {title === "Chỉnh sửa thông tin" ? title : "ChangeProductDetail"} productDetail={productDetail} isOpen={openModal} onClose={() => setOpenModal(false)}/>}
       
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
         <Icon icon={moreVerticalFill} width={20} height={20} />

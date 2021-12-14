@@ -18,7 +18,7 @@ const style = {
     '& .MuiTextField-root': { m: 1, width: '30ch' },
   };
 
-export default function ModalPage({title, isOpen, onClose, total}) {
+export default function ModalPage({title, isOpen, onClose, total, userDetail, idUser}) {
     const[name, setName] = useState('');
     const[birth, setBirth] = useState('');
     const[sex, setSex] = useState('');
@@ -42,7 +42,7 @@ export default function ModalPage({title, isOpen, onClose, total}) {
   const submitData = () => {
     const data = {
         phongBan: phongBan,
-        maCongNhan: `CN001`,
+        maCongNhan: title==="Chỉnh sửa thông tin" ? idUser : `CN0${total+3}`,
         chucVu: chucVu,
         hoTen: name,
         ngayNamSinh: "1999-05-18",
@@ -62,7 +62,7 @@ export default function ModalPage({title, isOpen, onClose, total}) {
           .then(res => {
               if (res.status) {
                   oncloseModal();
-                  alert("THêm mới công nhân thành công");
+                  alert("Thêm mới công nhân thành công");
               } else {
                   console.log(res.message);
                   alert(res.message);
