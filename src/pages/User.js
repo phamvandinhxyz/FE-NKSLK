@@ -181,7 +181,7 @@ export default function User() {
 
   return (
     <Page title="Danh sách công nhân">
-      <ModalPage title={titleModal} isOpen={openModal} onClose={() => setOpenModal(false)}/>
+      <ModalPage total={totalEmployee} title={titleModal} isOpen={openModal} onClose={() => setOpenModal(false)}/>
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -262,7 +262,7 @@ export default function User() {
                           <TableCell align="left">{gioBatDau}</TableCell>
                           <TableCell align="left">{gioKetThuc}</TableCell>
                           <TableCell align="right">
-                          <UserMoreMenu />
+                          <UserMoreMenu idUser={employee.maCongNhan} userDetail={employee} title="Chỉnh sửa thông tin"/>
                           </TableCell>
                         </TableRow>
                       );

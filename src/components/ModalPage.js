@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system';
+import axios from 'axios';
 
 
 
@@ -17,7 +18,7 @@ const style = {
     '& .MuiTextField-root': { m: 1, width: '30ch' },
   };
 
-export default function ModalPage({title, isOpen, onClose}) {
+export default function ModalPage({title, isOpen, onClose, total}) {
     const[name, setName] = useState('');
     const[birth, setBirth] = useState('');
     const[sex, setSex] = useState('');
@@ -26,6 +27,54 @@ export default function ModalPage({title, isOpen, onClose}) {
     const[chucVu, setChucVu] = useState('');
     const[luongBaoHiem, setLuongBaoHiem] = useState('');
     const[luongHopDong, setLuongHopDong] = useState('');
+
+    const oncloseModal = () =>{
+      setName("");
+      setBirth("");
+      setSex("");
+      setAdress("");
+      setPhongBan("");
+      setChucVu("");
+      setLuongBaoHiem("");
+      setLuongHopDong("")
+      onClose()
+  }
+  const submitData = () => {
+    const data = {
+        phongBan: phongBan,
+        maCongNhan: `CN001`,
+        chucVu: chucVu,
+        hoTen: name,
+        ngayNamSinh: "1999-05-18",
+        gioiTinh: sex,
+        luongBaoHiem: luongBaoHiem,
+        queQuan: address,
+        luongHopDong: luongHopDong,
+        gioBatDau: "06:00:00",
+        gioKetThuc: "14:00:00",
+        maDanhMucCongNhan: "DMCN_R010",
+    }
+    addEmployee(data)
+}
+    const addEmployee = (data) => {
+      axios.post('http://localhost:8080/api/v1/admin/employees', {...data}
+      )
+          .then(res => {
+              if (res.status) {
+                  oncloseModal();
+                  alert("THêm mới công nhân thành công");
+              } else {
+                  console.log(res.message);
+                  alert(res.message);
+              }
+          })
+          .catch(e => {
+              console.log("Network Failure!!!", e);
+              alert('Không thể kết nối với Internet!!');
+          })
+  }
+
+
     return (
         <div>
         <Modal
@@ -114,7 +163,7 @@ export default function ModalPage({title, isOpen, onClose}) {
                 }}
               />
             </div>
-            <Button onClick={() => alert(`${name},${birth},${sex},${address},${phongBan},${chucVu}, ${luongBaoHiem}, ${luongHopDong},`)} variant="contained" style={{marginTop: 20, padding: 10,}}>Hoàn thành</Button>
+            <Button onClick={() => {submitData()}} variant="contained" style={{marginTop: 20, padding: 10,}}>Hoàn thành</Button>
           </Box>
         </Modal>
       </div>

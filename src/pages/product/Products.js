@@ -61,6 +61,8 @@ function Products() {
 
   const navigate = useNavigate();
 
+  // eslint-disable-next-line spaced-comment
+  //GET API
   useEffect(() => {
     getEmployees();
   }, [pageEmployee, rowsPerPage,openModal])

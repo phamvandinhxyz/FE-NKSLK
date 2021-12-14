@@ -29,7 +29,7 @@ function ModalAddProduct({total, title, isOpen, onClose, productDetail}) {
     const [ngayDangKy, setNgayDangKy] = useState('');
     const [soDangKy, setSoDangKy] = useState('');
     const [quyCach, setQuyCach] = useState('');
-    console.log(productDetail);
+    // console.log(productDetail);
 
     const oncloseModal = () =>{
         setMaSanPham('')
@@ -97,7 +97,7 @@ function ModalAddProduct({total, title, isOpen, onClose, productDetail}) {
                             required
                             id="outlined-required"
                             label="Tên sản phẩm"
-                            // defaultValue={productDetail.tenSanPham}
+                            defaultValue="kfkdjfljkshfsdjhgfkj"
                             onChange={event => {
                                 const {value} = event.target;
                                 setTenSanPham(value);
